@@ -4,7 +4,6 @@ const pino = require('pino')
 const moment = require('moment-timezone')
 const { Boom } = require('@hapi/boom')
 const fs = require('fs')
-const canvafy = require('canvafy')
 const FileType = require('file-type')
 const path = require('path')
 const readline = require("readline");
@@ -190,35 +189,7 @@ return response
 }
 
 
-xyu.ev.on('group-participants.update', async (anu) => {
-if (!global.welcome) return
-let botNumber = await xyu.decodeJid(xyu.user.id)
-if (anu.participants.includes(botNumber)) return
-try {
-let metadata = await xyu.groupMetadata(anu.id)
-let namagc = metadata.subject
-let participants = anu.participants
-for (let num of participants) {
-let check = anu.author !== num && anu.author.length > 1
-let tag = check ? [anu.author, num] : [num]
-try {
-ppuser = await xyu.profilePictureUrl(num, 'image')
-} catch {
-ppuser = 'https://i.top4top.io/p_32084s9zw1.jpg'
-}
-if (anu.action == 'add') {
-                    xyu.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `Welcome @${num.split("@")[0]} To ${metadata.subject} ` })
-                } else if (anu.action == 'remove') {
-                    xyu.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `@${num.split("@")[0]} Leaving To ${metadata.subject}` })
-                } else if (anu.action == 'promote') {
-                    xyu.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `@${num.split('@')[0]} Promote From ${metadata.subject}` })
-                } else if (anu.action == 'demote') {
-                    xyu.sendMessage(anu.id, { image: { url: ppuser }, mentions: [num], caption: `@${num.split('@')[0]} Demote From ${metadata.subject}` })
-}
-} 
-} catch (err) {
-console.log(err)
-}}) 
+
     
 xyu.sendVideoAsSticker = async (jid, path, quoted, options = {}) => {
 let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
